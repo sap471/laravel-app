@@ -55,15 +55,8 @@ RUN composer dump-autoload --optimize
 RUN bun run build \
     && bun install --production
 
-RUN php artisan optimize:clear
-
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
-
-RUN php artisan optimize
-
 EXPOSE 9000
 
 VOLUME /var/www/storage
 
-CMD ["php", "artisan", "octane:start", "--server=swoole", "--host=0.0.0.0", "--port=9000"]
+CMD ['sh', '-c', '/var/www/startup-script']

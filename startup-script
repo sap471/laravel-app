@@ -1,7 +1,0 @@
-#!/bin/bash
-
-php artisan optimize:clear
-chown -R www-data:www-data /var/www
-chmod -R 775 /var/www/storage /var/www/bootstrap/cache
-
-php artisan octane:start --server=swoole --host=0.0.0.0 --port=$APP_PORT

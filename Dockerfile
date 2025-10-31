@@ -1,6 +1,6 @@
 FROM php:8.4-cli AS builder
 
-ENV APP_PORT=8000
+ENV APP_PORT=9000
 
 # install dependencies
 RUN apt-get update && apt-get install -y \
@@ -51,8 +51,8 @@ COPY . .
 
 RUN composer dump-autoload --optimize
 
-RUN bun run build && \
-    bun install --production
+RUN bun run build \
+    && bun install --production
 
 
 RUN php artisan config:clear \
@@ -62,10 +62,11 @@ RUN php artisan config:clear \
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-RUN php artisan optimize
+RUN php artisan optimize:clear \
+    && php artisan optimize
 
 EXPOSE 9000
 
 VOLUME /var/www/storage
 
-CMD ["sh", "-c", "php", "artisan", "octane:start", "--server=swoole", "--host=0.0.0.0", "--port=9000"]
+CMD ["php", "artisan", "octane:start", "--server=swoole", "--host=0.0.0.0", "--port=9000"]

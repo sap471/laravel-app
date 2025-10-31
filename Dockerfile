@@ -45,13 +45,15 @@ RUN mkdir -p bootstrap/cache storage/app storage/framework/cache/data \
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-scripts
 
 COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
+RUN bun install --frozen-lockfile --no-cache
 
 COPY . .
 
 RUN composer dump-autoload --optimize
 
-RUN bun run build
+RUN bun run build && \
+    bun install --production
+
 
 RUN php artisan config:clear \
     && php artisan route:clear \
@@ -63,5 +65,7 @@ RUN chown -R www-data:www-data /var/www \
 RUN php artisan optimize
 
 EXPOSE 9000
+
+VOLUME /var/www/storage
 
 CMD ["sh", "-c", "php", "artisan", "octane:start", "--server=swoole", "--host=0.0.0.0", "--port=9000"]

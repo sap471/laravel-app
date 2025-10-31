@@ -59,4 +59,6 @@ EXPOSE 9000
 
 VOLUME /var/www/storage
 
+ENTRYPOINT ['/bin/bash']
+
 CMD ['/var/www/startup-script']

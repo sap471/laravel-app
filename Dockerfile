@@ -59,4 +59,4 @@ EXPOSE 9000
 
 VOLUME /var/www/storage
 
-CMD ['sh', '-c', '/var/www/startup-script']
+CMD ['/var/www/startup-script']

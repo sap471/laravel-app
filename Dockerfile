@@ -51,19 +51,16 @@ COPY . .
 
 RUN composer dump-autoload --optimize
 
+# build & clear cache
 RUN bun run build \
     && bun install --production
 
-
-RUN php artisan config:clear \
-    && php artisan route:clear \
-    && php artisan view:clear
+RUN php artisan optimize:clear
 
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-RUN php artisan optimize:clear \
-    && php artisan optimize
+RUN php artisan optimize
 
 EXPOSE 9000
 
